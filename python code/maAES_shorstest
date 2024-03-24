@@ -1,6 +1,6 @@
 # tạo mảng Rcon, để phù Rcon[1]="01" thì ta tạo thêm 1 phần tử rỗng 
-r_con=["","01000000","02000000","04000000","08000000",
-       "10000000","20000000","40000000","80000000","1b000000","36000000"]
+r_con=["","01000000","02000000","04000000","08000000","10000000",
+       "20000000","40000000","80000000","1b000000","36000000"]
 #tạo mảng S-box
 s_box=[["63","7C","77","7B","F2","6B","6F","C5","30","01","67","2B","FE","D7","AB","76"],
        ["CA","82","C9","7D","FA","59","47","F0","AD","D4","A2","AF","9C","A4","72","C0"],
@@ -19,73 +19,33 @@ s_box=[["63","7C","77","7B","F2","6B","6F","C5","30","01","67","2B","FE","D7","A
        ["E1","F8","98","11","69","D9","8E","94","9B","1E","87","E9","CE","55","28","DF"],
        ["8C","A1","89","0D","BF","E6","42","68","41","99","2D","0F","B0","54","BB","16"]
        ]
-#theo đầu bài thì k là ...
-# k="CDAB0FC51CACBCF9A8A348C3D2D0247A"
-#k ví dụ của thầy
-k="2b7e151628aed2a6abf7158809cf4f3c"
-#hàm chia khóa k thành 4 phần
-def div_k_into_4_word(k):
-    if len(k)!=32:
-        raise ValueError("len k must is 32")
-    #lấy trong k từ vị trí 0 đến 7
-    w0=k[0:8]
-    w1=k[8:16]
-    w2=k[16:24]
-    w3=k[24:32]
-    return w0,w1,w2,w3
-# hàm dịch vòng trái 1byte
-def RotWord(w3):
-    if len(w3)!=8:
-        raise ValueError("len w3 must is 8")
-    b0=w3[0:2]
-    return w3[2:8]+w3[0:2]
 #hàm thay thế rw bằng từ trong S-box
 def replaceS_box(rw):
     if len(rw)%2!=0:
         raise ValueError("len rw must mod = 0")
-    i=0
     res=""
-    while i<len(rw):
-        #chuyển rw thứ i từ hệ cơ số 16 về hệ cơ số 10
-        row=int(rw[i], 16)
-        col=int(rw[i+1], 16)
-        res+=s_box[row][col]
-        i+=2
+    for i in range(0,len(rw),2):
+        res+=s_box[int(rw[i], 16)][int(rw[i+1], 16)]
     return res
-
-# tạo function xor hexa
+#hàm xor hexa
 def hex_xor(hex1, hex2):
     if not all(char in "0123456789ABCDEFabcdef" for char in hex1+hex2):
         raise ValueError("hexa invalid")
     return hex(int(hex1, 16)^int(hex2, 16))[2:].zfill(max(len(hex1), len(hex2)))
+#hàm tạo 10 key
+def key_expansion(key="2b7e151628aed2a6abf7158809cf4f3c"):
+    if len(key)!=32:
+        raise ValueError("length key must is 32")
+    w,k=[None]*50,[None]*20
+    w[0],w[1],w[2],w[3]=key[0:8],key[8:16],key[16:24],key[24:32]
+    for i in range(1,11):
+        w[i*4]=hex_xor(w[i*4-4],hex_xor(replaceS_box(w[i*4-1][2:8]+w[i*4-1][0:2]),r_con[i]))
+        w[i*4+1]=hex_xor(w[i*4],w[i*4-3])
+        w[i*4+2]=hex_xor(w[i*4+1],w[i*4-2])
+        w[i*4+3]=hex_xor(w[i*4+2],w[i*4-1])
+        k.append(w[i*4]+w[i*4+1]+w[i*4+2]+w[i*4+3])
+    return k,w
 
-
-#mảng w
-w=[None]*50
-#Chia khóa K (128 bit) thành 4 word (32 bit)
-w[0],w[1],w[2],w[3]=div_k_into_4_word(k)
-#Dịch vòng trái 1 byte đối với w3 (32 bit)
-rw=RotWord(w[3])
-#Thay thế từng byte trong rw bằng bảng S-box SubWord
-sw=replaceS_box(rw)
-#sw XORbit với Rcon[j]
-xcsw=hex_xor(sw,r_con[1])
-#Tính khóa K1 = (w4, w5, w6, w7)
-w[4]=hex_xor(w[0],xcsw)
-w[5]=hex_xor(w[4],w[1])
-w[6]=hex_xor(w[5],w[2])
-w[7]=hex_xor(w[6],w[3])
-
-#mảng k
-k=[w[4]+w[5]+w[6]+w[7]]
-#LẶP LẠI từ Bài 2 đến Bài 5 để tạo các khóa K2, K3, ..., K10
-for i in range(2,11):
-    rw=RotWord(w[i*4-1])
-    sw=replaceS_box(rw)
-    xcsw=hex_xor(sw,r_con[i])
-    w[i*4]=hex_xor(w[i*4-4],xcsw)
-    w[i*4+1]=hex_xor(w[i*4],w[i*4-3])
-    w[i*4+2]=hex_xor(w[i*4+1],w[i*4-2])
-    w[i*4+3]=hex_xor(w[i*4+2],w[i*4-1])
-    k.append(w[i*4]+w[i*4+1]+w[i*4+2]+w[i*4+3])
-# nếu w43=b6630ca6 thì đã sinh 10 khóa thành công 
+# sinh 10 khóa thành công w43=b6630ca6 with key mặc định
+k,w=key_expansion()
+print(w[43])
