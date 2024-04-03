@@ -11,7 +11,7 @@ def is_prime(n):
         return False
     if n <= 3:
         return True
-    if n % 2 == 0 or n % 3 == 0:
+    if n % 2 == 0 or n % 3 == 0 or n % 5 == 0:
         return False
     i = 5
     while i * i <= n:
