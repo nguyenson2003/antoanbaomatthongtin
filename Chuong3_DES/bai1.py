@@ -7,6 +7,6 @@ def PC1 (hexaKey):
     while len(binKey) < 64: binKey="0"+binKey
     binKeyAfter = ''.join([binKey[pc1table[i]-1] for i in range(56)])
     return [binKeyAfter[0:28],binKeyAfter[28:56]]
-plaintext="133457799BBCDFF1"
-pc1 = PC1(plaintext)
+plainkey="F35D514714F45A8A"
+pc1 = PC1(plainkey)
 # print("C0: ",pc1[0],"D0: ",pc1[1])

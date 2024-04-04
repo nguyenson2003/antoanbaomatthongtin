@@ -16,5 +16,5 @@ for i in range(0,17):
     K.append(PC2(C[i]+D[i]))
 
 
-for i in range(1,17):
-    print("K",i,": ",K[i],sep="")
+# for i in range(1,17):
+#     print("K",i,": ",K[i],sep="")

@@ -5,6 +5,7 @@ def vigenere_autokey_decrypt(text, key):# m,k
     res = []
     for i in range(len(text)):
         res.append( chr((ord(text[i])-ord(key[i] if i<len(key) else res[i-len(key)])-ord('A')-ord('A')+26*26)%26+ord('A')))
-    return res
+    return "".join(res)
 
 print(vigenere_autokey_encrypt("THETRUTHWILLO","THEGRASS"))
+print(vigenere_autokey_decrypt("MOIZIULZPPPEF","THEGRASS"))
