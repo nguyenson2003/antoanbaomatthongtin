@@ -1,4 +1,4 @@
-def decrypt(text, key):
+def encrypt(text, key):
     decrypted_text = ""
     #auto viết thường
     text=text.upper()
@@ -13,10 +13,14 @@ def decrypt(text, key):
     return decrypted_text
 
 # Example usage:
-encrypted_text = "abcdefghijklmnopqrstuvwxyz"
-key = "JEHFAVZNOXUBMYPKDLGSRCTWQI"
+# plaintext = "abcdefghijklmnopqrstuvwxyz"
+# key = "JEHFAVZNOXUBMYPKDLGSRCTWQI"
 
-decrypted_text = decrypt(encrypted_text, key)
-print("Decrypted text:", decrypted_text)
-#câu 4
-print("Decrypted text 2:", decrypt("MONEYMAKESTHEMAR", "JEHFAVZNOXUBMYPKDLGSRCTWQI"))
+# encrypted_text = encrypt(plaintext, key)
+# print("Decrypted text:", encrypted_text)
+# #câu 4
+# print("Decrypted text 2:", encrypt("MONEYMAKESTHEMAR", "JEHFAVZNOXUBMYPKDLGSRCTWQI"))
+f = open("Chuong1_macodien/input4.txt", "r")
+plaintext = f.readline()
+key = f.readline()
+print(encrypt(plaintext,key))

@@ -7,5 +7,9 @@ def vigenere_autokey_decrypt(text, key):# m,k
         res.append( chr((ord(text[i])-ord(key[i] if i<len(key) else res[i-len(key)])-ord('A')-ord('A')+26*26)%26+ord('A')))
     return "".join(res)
 
-print(vigenere_autokey_encrypt("THETRUTHWILLO","THEGRASS"))
-print(vigenere_autokey_decrypt("MOIZIULZPPPEF","THEGRASS"))
+# print(vigenere_autokey_encrypt("THETRUTHWILLO","THEGRASS"))
+# print(vigenere_autokey_decrypt("EZWPPRFPUJQFNUX","BLACK"))
+f = open("Chuong1_macodien/input3.txt", "r")
+plaintext = f.readline()
+key = f.readline()
+print(vigenere_autokey_encrypt(plaintext,key))
