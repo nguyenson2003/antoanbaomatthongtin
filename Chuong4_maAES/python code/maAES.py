@@ -58,11 +58,14 @@ def hex_xor(hex1, hex2):
         raise ValueError("hexa invalid")
     return hex(int(hex1, 16)^int(hex2, 16))[2:].zfill(max(len(hex1), len(hex2)))
 
-#
-#k ví dụ của thầy
-key="2b7e151628aed2a6abf7158809cf4f3c"
-#m là plaintext
-m="3243f6a8885a308d313198a2e0370734"
+
+# #k ví dụ của thầy
+# key="2b7e151628aed2a6abf7158809cf4f3c"
+# #m là plaintext
+# m="3243f6a8885a308d313198a2e0370734"
+file = open("Chuong4_maAES/input.txt", "r")
+m = file.readline().strip()
+key = file.readline().strip()
 #mảng w
 w=[None]*50
 #Chia khóa K (128 bit) thành 4 word (32 bit)

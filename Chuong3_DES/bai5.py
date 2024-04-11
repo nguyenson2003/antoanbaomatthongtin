@@ -7,4 +7,5 @@ def e_box(R0):
     return ER0
 R0 = "11110000101010101111000010101010"
 ER0 = e_box(R0)
-# print(ER0)
+print("bai 5:")
+print("ER0:",ER0)

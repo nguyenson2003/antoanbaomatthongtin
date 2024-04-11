@@ -10,7 +10,8 @@ D = [pc1[1]]
 for i in range(16):
     C.append(shift(C[i-1+1],tableLeftShift[i]) )
     D.append(shift(D[i-1+1],tableLeftShift[i]) )
+print("bai 2:")
 
-# for i in range(17):
-#     print("C",i,": ",C[i],sep="",end=", ")
-#     print("D",i,": ",D[i],sep="")
+for i in range(17):
+    print("C",i,": ",C[i],sep="",end=", ")
+    print("D",i,": ",D[i],sep="")

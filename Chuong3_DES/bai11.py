@@ -15,5 +15,6 @@ def reverse_initial_permutation(L16,R16):
     return bintext
 
 C = reverse_initial_permutation(bai10.L[16],bai10.R[16])
+print("bai 11:")
 print(C)
 print(hex(int(C,2))[2::].upper())

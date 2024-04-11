@@ -47,4 +47,5 @@ def s_box(A):
     return B
 
 B = s_box(bai6.A)
-# print(B)
+print("bai 7:")
+print("B:",B)

@@ -1,3 +1,4 @@
+import bai0
 ptable = [58, 50, 42, 34, 26, 18, 10, 2, 
           60, 52, 44, 36, 28, 20, 12, 4, 
           62, 54, 46, 38, 30, 22, 14, 6, 
@@ -12,8 +13,9 @@ def initial_permutation(hexatext):
     bintext = ''.join([bintext[i-1] for i in ptable])
     return bintext[0:len(bintext)//2],bintext[len(bintext)//2::]
 
-hexatext = "1EDE3CBCAF288822"
+hexatext = bai0.plaintext
 L0,R0 = initial_permutation(hexatext)
-# print("L0 =",L0)
-# print("R0 =",R0)
+print("bai 4:")
+print("L0 =",L0)
+print("R0 =",R0)
 # print(list(map(int,input().split()+input().split()+input().split()+input().split()+input().split()+input().split()+input().split()+input().split())))

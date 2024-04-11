@@ -18,5 +18,6 @@ def oneRoundDES(L0,R0,K1):
 hexatext = bai4.hexatext
 L0, R0 = bai4.initial_permutation(hexatext)
 L1, R1 = oneRoundDES(L0,R0,bai3.K[1])
-# print("L1 =",L1)
-# print("R1 =",R1)
+print("bai 9:")
+print("L1 =",L1)
+print("R1 =",R1)

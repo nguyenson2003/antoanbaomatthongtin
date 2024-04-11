@@ -8,4 +8,5 @@ def p_box(B):
     return ''.join([B[i-1] for i in ptable])
 
 F = p_box(bai7.B)
-# print(F)
+print("bai 8:")
+print("F:",F)
