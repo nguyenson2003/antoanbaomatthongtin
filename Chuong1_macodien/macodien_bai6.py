@@ -1,83 +1,29 @@
-def encryptRailFence(text, key):
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            key, plaintext = file.read().splitlines()
+            return int(key), plaintext
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        return None, None
+    except Exception as e:
+        print(f"Error reading file '{filename}': {e}")
+        return None, None
 
-	rail = [['\n' for i in range(len(text))]
-				for j in range(key)]
+def encrypt(plaintext, key):
+    ciphertext = ""
+    for i in range(key):
+        for j in range(i, len(plaintext), key):
+            ciphertext += plaintext[j]
+    return ciphertext
 
-	dir_down = False
-	row, col = 0, 0
-	
-	for i in range(len(text)):
+# Đọc khóa và văn bản cần mã hóa từ file input
+input_filename = "input.txt"
+key, plaintext = read_input_file(input_filename)
 
-		if (row == 0) or (row == key - 1):
-			dir_down = not dir_down
-
-		rail[row][col] = text[i]
-		col += 1
-
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-
-	result = []
-	for i in range(key):
-		for j in range(len(text)):
-			if rail[i][j] != '\n':
-				result.append(rail[i][j])
-	return("" . join(result))
-	
-def decryptRailFence(cipher, key):
-
-	rail = [['\n' for i in range(len(cipher))]
-				for j in range(key)]
-
-	dir_down = None
-	row, col = 0, 0
-	
-	for i in range(len(cipher)):
-		if row == 0:
-			dir_down = True
-		if row == key - 1:
-			dir_down = False
-
-		rail[row][col] = '*'
-		col += 1
-
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-
-	index = 0
-	for i in range(key):
-		for j in range(len(cipher)):
-			if ((rail[i][j] == '*') and
-			(index < len(cipher))):
-				rail[i][j] = cipher[index]
-				index += 1
-
-	result = []
-	row, col = 0, 0
-	for i in range(len(cipher)):
-
-		if row == 0:
-			dir_down = True
-		if row == key-1:
-			dir_down = False
-
-		if (rail[row][col] != '*'):
-			result.append(rail[row][col])
-			col += 1
-
-		if dir_down:
-			row += 1
-		else:
-			row -= 1
-	return("".join(result))
-
-# Driver code
-if __name__ == "__main__":
-#giai ma
-	print(encryptRailFence("", 2))
-#ma khoa
-	print(decryptRailFence("", 3))
+if key is not None and plaintext is not None:
+    # Mã hóa văn bản
+    ciphertext = encrypt(plaintext, key)
+    print("Cipher Text:", ciphertext)
+else:
+    print("Cannot proceed due to error in reading input file.")

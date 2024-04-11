@@ -1,153 +1,73 @@
+def generate_playfair_matrix(key):
+    # Tạo ma trận 5x5 từ khóa
+    key = key.replace("J", "I")  # Loại bỏ 'J' và thay thế bằng 'I'
+    key_set = set(key)
+    alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+    for char in alphabet:
+        if char not in key_set:
+            key += char
+            key_set.add(char)
+    matrix = [list(key[i:i+5]) for i in range(0, 25, 5)]
+    return matrix
 
-def toLowerCase(text):
-	return text.lower()
+def find_position(matrix, char):
+    # Tìm vị trí của ký tự trong ma trận
+    for i in range(5):
+        for j in range(5):
+            if matrix[i][j] == char:
+                return i, j
 
-def removeSpaces(text):
-	newText = ""
-	for i in text:
-		if i == " ":
-			continue
-		else:
-			newText = newText + i
-	return newText
+def encrypt(plaintext, key_matrix):
+    plaintext = plaintext.upper().replace("J", "I")  # Chuyển đổi văn bản thành chữ hoa và thay thế 'J' bằng 'I'
+    plaintext = plaintext.replace(" ", "")  # Loại bỏ khoảng trắng
+    # Chia văn bản thành các cặp ký tự
+    pairs = []
+    i = 0
+    while i < len(plaintext):
+        if i == len(plaintext) - 1 or plaintext[i] == plaintext[i+1]:
+            pairs.append(plaintext[i] + 'X')
+            i += 1
+        else:
+            pairs.append(plaintext[i:i+2])
+            i += 2
+    # Mã hóa từng cặp ký tự
+    ciphertext = ""
+    for pair in pairs:
+        row1, col1 = find_position(key_matrix, pair[0])
+        row2, col2 = find_position(key_matrix, pair[1])
+        if row1 == row2:  # Nếu nằm trên cùng một hàng
+            ciphertext += key_matrix[row1][(col1 + 1) % 5] + key_matrix[row2][(col2 + 1) % 5]
+        elif col1 == col2:  # Nếu nằm trên cùng một cột
+            ciphertext += key_matrix[(row1 + 1) % 5][col1] + key_matrix[(row2 + 1) % 5][col2]
+        else:  # Nếu không cùng hàng cũng không cùng cột
+            ciphertext += key_matrix[row1][col2] + key_matrix[row2][col1]
+    return ciphertext
 
-def Diagraph(text):
-	Diagraph = []
-	group = 0
-	for i in range(2, len(text), 2):
-		Diagraph.append(text[group:i])
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            return file.read().splitlines()
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        return None
+    except Exception as e:
+        print(f"Error reading file '{filename}': {e}")
+        return None
 
-		group = i
-	Diagraph.append(text[group:])
-	return Diagraph
+# Đọc văn bản và khóa từ file input
+input_filename = "inputB4C1.txt"
+input_data = read_input_file(input_filename)
 
-def FillerLetter(text):
-	k = len(text)
-	if k % 2 == 0:
-		for i in range(0, k, 2):
-			if text[i] == text[i+1]:
-				new_word = text[0:i+1] + str('x') + text[i+1:]
-				new_word = FillerLetter(new_word)
-				break
-			else:
-				new_word = text
-	else:
-		for i in range(0, k-1, 2):
-			if text[i] == text[i+1]:
-				new_word = text[0:i+1] + str('x') + text[i+1:]
-				new_word = FillerLetter(new_word)
-				break
-			else:
-				new_word = text
-	return new_word
+if input_data:
+    key, text_Plain = input_data  # Unpack giá trị trả về từ hàm read_input_file
+    # Thực hiện mã hóa và các bước tiếp theo...
+else:
+    print("Không thể tiếp tục do lỗi khi đọc tệp input.txt.")
 
+# Tạo ma trận từ khóa
+key_matrix = generate_playfair_matrix(key)
 
-list1 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm',
-		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+# Mã hóa văn bản
+encrypted_text = encrypt(text_Plain, key_matrix)
 
-def generateKeyTable(word, list1):
-	key_letters = []
-	for i in word:
-		if i not in key_letters:
-			key_letters.append(i)
-
-	compElements = []
-	for i in key_letters:
-		if i not in compElements:
-			compElements.append(i)
-	for i in list1:
-		if i not in compElements:
-			compElements.append(i)
-
-	matrix = []
-	while compElements != []:
-		matrix.append(compElements[:5])
-		compElements = compElements[5:]
-
-	return matrix
-
-def search(mat, element):
-	for i in range(5):
-		for j in range(5):
-			if(mat[i][j] == element):
-				return i, j
-
-def encrypt_RowRule(matr, e1r, e1c, e2r, e2c):
-	char1 = ''
-	if e1c == 4:
-		char1 = matr[e1r][0]
-	else:
-		char1 = matr[e1r][e1c+1]
-
-	char2 = ''
-	if e2c == 4:
-		char2 = matr[e2r][0]
-	else:
-		char2 = matr[e2r][e2c+1]
-
-	return char1, char2
-
-def encrypt_ColumnRule(matr, e1r, e1c, e2r, e2c):
-	char1 = ''
-	if e1r == 4:
-		char1 = matr[0][e1c]
-	else:
-		char1 = matr[e1r+1][e1c]
-
-	char2 = ''
-	if e2r == 4:
-		char2 = matr[0][e2c]
-	else:
-		char2 = matr[e2r+1][e2c]
-
-	return char1, char2
-
-def encrypt_RectangleRule(matr, e1r, e1c, e2r, e2c):
-	char1 = ''
-	char1 = matr[e1r][e2c]
-
-	char2 = ''
-	char2 = matr[e2r][e1c]
-
-	return char1, char2
-
-def encryptByPlayfairCipher(Matrix, plainList):
-	CipherText = []
-	for i in range(0, len(plainList)):
-		c1 = 0
-		c2 = 0
-		ele1_x, ele1_y = search(Matrix, plainList[i][0])
-		ele2_x, ele2_y = search(Matrix, plainList[i][1])
-
-		if ele1_x == ele2_x:
-			c1, c2 = encrypt_RowRule(Matrix, ele1_x, ele1_y, ele2_x, ele2_y)
-			# Get 2 letter cipherText
-		elif ele1_y == ele2_y:
-			c1, c2 = encrypt_ColumnRule(Matrix, ele1_x, ele1_y, ele2_x, ele2_y)
-		else:
-			c1, c2 = encrypt_RectangleRule(
-				Matrix, ele1_x, ele1_y, ele2_x, ele2_y)
-
-		cipher = c1 + c2
-		CipherText.append(cipher)
-	return CipherText
-#tu can giai ma
-text_Plain = 'instruments'
-text_Plain = removeSpaces(toLowerCase(text_Plain))
-PlainTextList = Diagraph(FillerLetter(text_Plain))
-if len(PlainTextList[-1]) != 2:
-	PlainTextList[-1] = PlainTextList[-1]+'z'
-#khoa
-key = "Monarchy"
-print("Key text:", key)
-key = toLowerCase(key)
-Matrix = generateKeyTable(key, list1)
-
-print("Plain Text:", text_Plain)
-CipherList = encryptByPlayfairCipher(Matrix, PlainTextList)
-
-#kq sau giai ma 
-CipherText = ""
-for i in CipherList:
-	CipherText += i
-print("CipherText:", CipherText)
+print("Văn bản mã hóa:", encrypted_text)

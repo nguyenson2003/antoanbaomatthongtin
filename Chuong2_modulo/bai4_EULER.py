@@ -1,24 +1,34 @@
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            n = int(file.read())
+            return n
+    except FileNotFoundError:
+        print(f" File '{filename}' ko ton tai.")
+        return None
+    except Exception as e:
+        print(f"loi doc file '{filename}': {e}")
+        return None
+
 def euler_phi(n):
-    result = n  # Khởi tạo kết quả bằng n
-    
-    # Phân tích n thành các thừa số nguyên tố và loại bỏ các thừa số trùng lặp
+    result = n
     p = 2
     while p * p <= n:
         if n % p == 0:
             while n % p == 0:
                 n //= p
-            result *= (1.0 - (1.0 / p))
+            result -= result // p
         p += 1
-    
-    # Xử lý trường hợp n còn lại là một số nguyên tố
     if n > 1:
-        result *= (1.0 - (1.0 / n))
-    
-    return int(result)
+        result -= result // n
+    return result
 
-# Nhập giá trị n từ người dùng
-n = int(input("Nhập giá trị n: "))
+# Đọc giá trị n từ file input
+input_filename = "Chuong2_modulo/input.txt"
+n = read_input_file(input_filename)
 
-# Tính giá trị của hàm Euler và in ra kết quả
-phi_n = euler_phi(n)
-print("Giá trị của hàm Euler phi(", n, ") =", phi_n)
+if n is not None:
+    euler_value = euler_phi(n)
+    print(f"ket qua phi({n}) la:", euler_value)
+else:
+    print("loi khi doc file.")

@@ -1,27 +1,33 @@
-def discrete_logarithm(a, b, n):
-    m = int(n ** 0.5) + 1
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            a, b, n = map(int, file.read().split())
+            return a, b, n
+    except FileNotFoundError:
+        print(f"File '{filename}' khong ton tai.")
+        return None, None, None
+    except Exception as e:
+        print(f"loi file '{filename}': {e}")
+        return None, None, None
 
-    # Tính danh sách baby steps
-    baby_steps = {}
-    for j in range(m):
-        baby_steps[pow(a, j, n)] = j
+def logarit_RoiRac(a, b, n):
+    k = 0
+    while pow(a, k, n) != b:
+        if k > n-1:
+            return -1
+        k += 1
+    return k
 
-    # Tính giant steps và kiểm tra xem có phải là logarithm rời rạc hay không
-    giant_step = pow(a, m * (n - 2), n)
-    for i in range(m):
-        if b in baby_steps:
-            return i * m + baby_steps[b]
-        else:
-            b = (b * giant_step) % n
+# Đọc giá trị a, b, n từ file input
+input_filename = "Chuong2_modulo/input.txt" 
+a, b, n = read_input_file(input_filename)
 
-    return None
-
-# Sử dụng ví dụ
-a = 2
-b = 7
-n = 11
-result = discrete_logarithm(a, b, n)
-if result is not None:
-    print(f"logarithm cua {b} voi co so {a} modulo {n} la {result}.")
+if a is not None and b is not None and n is not None:
+    # Tìm logarithm rời rạc của b với cơ số a modulo n
+    result = logarit_RoiRac(a, b, n)
+    if result == -1:
+        print("Không tìm thấy logarithm rời rạc của", b, "với cơ số", a, "modulo", n)
+    else:
+        print("Logarithm rời rạc của", b, "với cơ số", a, "modulo", n, "là:", result)
 else:
-    print(f"khong tim duoc logarithm cua {b} voi co so {a} modulo {n}.")
+    print("loi doc file.")

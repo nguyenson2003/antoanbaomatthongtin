@@ -1,33 +1,19 @@
-def power_mod_Fermat(a, m, n):
-    # Kiểm tra nếu n là số nguyên tố
-    if not is_prime(n):
-        raise ValueError("n phải là số nguyên tố để sử dụng định lý Fermat.")
+def power_modulo(a, m, n):
+    if m == 0:
+        return 1 % n
+    result = power_modulo(a, m // 2, n)
+    result = (result * result) % n
+    if m % 2 == 1:
+        result = (result * a) % n
+    return result
+
+if __name__ == "__main__":
+    # Đọc từ file input
+    with open("Chuong2_modulo/input.txt", "r") as file:
+        a, m, n = map(int, file.readline().split())
     
-    # Áp dụng Định lý Fermat
-    return pow(a, m % (n - 1), n)
-
-def is_prime(n):
-    if n <= 1:
-        return False
-    if n <= 3:
-        return True
-    if n % 2 == 0 or n % 3 == 0 or n % 5 == 0:
-        return False
-    i = 5
-    while i * i <= n:
-        if n % i == 0 or n % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-# Nhập giá trị a, m, và n từ người dùng
-a = int(input("Nhập giá trị a: "))
-m = int(input("Nhập giá trị mũ m: "))
-n = int(input("Nhập giá trị n: "))
-
-# Tính lũy thừa modulo và in ra kết quả
-try:
-    result = power_mod_Fermat(a, m, n)
-    print("Kết quả:", result)
-except ValueError as e:
-    print(e)
+    # Tính lũy thừa modulo
+    result = power_modulo(a, m, n)
+    
+    # In kết quả
+    print("a^m mod n =", result)

@@ -1,17 +1,36 @@
-# Các giá trị đã cho
+def power_mod(base, exponent, modulus):
+    result = 1
+    base = base % modulus
+    while exponent > 0:
+        if exponent % 2 == 1:
+            result = (result * base) % modulus
+        exponent = exponent // 2
+        base = (base * base) % modulus
+    return result
+
+def diffie_hellman(q, a, xA, xB):
+    # Tính yA và yB
+    yA = power_mod(a, xA, q)
+    yB = power_mod(a, xB, q)
+
+    # Tính khóa phiên K
+    K_A = power_mod(yB, xA, q)
+    K_B = power_mod(yA, xB, q)
+
+    return yA, yB, K_A, K_B
+
+# Số nguyên tố và số nguyên thủy
 q = 7207
 a = 3
+
+# Khóa riêng của An và Ba
 xA = 422
 xB = 286
 
-# Tính khóa công khai và khóa phiên cho An
-yA = pow(a, xA, q)
-K_A = pow(yB, xA, q)
+# Giải bài toán
+yA, yB, K_A, K_B = diffie_hellman(q, a, xA, xB)
 
-# Tính khóa công khai và khóa phiên cho Ba
-yB = pow(a, xB, q)
-K_B = pow(yA, xB, q)
-
-# In ra kết quả
-print("a: Khóa công khai của An: yA =", yA, " Khóa phiên K =", K_A)
-print("b: Khóa công khai của Ba: yB =", yB, " Khóa phiên K =", K_B)
+print("yA =", yA)
+print("yB =", yB)
+print("Khóa phiên của An (K_A) =", K_A)
+print("Khóa phiên của Ba (K_B) =", K_B)

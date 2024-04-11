@@ -1,47 +1,36 @@
-def gcd_extended(a, b):
-    if a == 0:
-        return b, 0, 1
-    gcd, x1, y1 = gcd_extended(b % a, a)
-    x = y1 - (b // a) * x1
-    y = x1
-    return gcd, x, y
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            m1, m2, m3, a1, a2, a3 = map(int, file.read().split())
+            return m1, m2, m3, a1, a2, a3
+    except FileNotFoundError:
+        print(f"File '{filename}' khong ton tai.")
+        return None, None, None, None, None, None
+    except Exception as e:
+        print(f"loi file  '{filename}': {e}")
+        return None, None, None, None, None, None
 
-def solve_modular_equation(a1, b1, a2, b2, a3, b3, n):
-    # Tìm gcd giữa a1 và a2
-    gcd1, x0, _ = gcd_extended(a1, a2)
+def dinh_ly_TrungHoa(m1, m2, m3, a1, a2, a3):
+    M = m1 * m2 * m3
     
-    # Kiểm tra nếu gcd1 không chia hết cho a3
-    if a3 % gcd1 != 0:
-        return "Không có nghiệm"
+    M1 = M // m1
+    M2 = M // m2
+    M3 = M // m3
     
-    # Tìm nghiệm modulo
-    x0 %= n // gcd1
-    x = (x0 * (b2 - b1) // gcd1) % (n // gcd1)
+    M1_inverse = pow(M1, -1, m1)
+    M2_inverse = pow(M2, -1, m2)
+    M3_inverse = pow(M3, -1, m3)
     
-    # Kiểm tra từng giá trị x có thỏa mãn phương trình thứ hai hay không
-    solutions = []
-    for k in range(gcd1):
-        xk = x0 + k * (n // gcd1)
-        xk %= n
-        if (a2 * xk) % n == b2:
-            # Kiểm tra nếu xk thỏa mãn cả hai phương trình
-            if (a3 * xk) % n == b3:
-                solutions.append((xk, k))
+    x = (a1 * M1 * M1_inverse + a2 * M2 * M2_inverse + a3 * M3 * M3_inverse) % M
     
-    if not solutions:
-        return "Không có nghiệm"
-    
-    return solutions
+    return x
 
-# Nhập các hệ số và modulo từ người dùng
-a1 = int(input("Nhập hệ số a1: "))
-b1 = int(input("Nhập hệ số b1: "))
-a2 = int(input("Nhập hệ số a2: "))
-b2 = int(input("Nhập hệ số b2: "))
-a3 = int(input("Nhập hệ số a3: "))
-b3 = int(input("Nhập hệ số b3: "))
-n = int(input("Nhập modulo n: "))
+# Đọc giá trị m1, m2, m3, a1, a2, a3 từ file input
+input_filename = "Chuong2_modulo/input.txt"
+m1, m2, m3, a1, a2, a3 = read_input_file(input_filename)
 
-# Giải hệ phương trình modulo và in ra kết quả
-result = solve_modular_equation(a1, b1, a2, b2, a3, b3, n)
-print("Nghiệm của hệ phương trình modulo:", result)
+if m1 is not None and m2 is not None and m3 is not None and a1 is not None and a2 is not None and a3 is not None:
+    result = dinh_ly_TrungHoa(m1, m2, m3, a1, a2, a3)
+    print("ket qua sau khi giai he pt x= :", result)
+else:
+    print("loi khi doc file.")

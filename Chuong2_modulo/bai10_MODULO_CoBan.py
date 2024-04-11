@@ -1,34 +1,35 @@
-def basic_modulo_operations(a, b, x, y, n):
-    # Biểu thức 1: A1 = (a*x + b*y) mod n
-    A1 = ((a * x) % n + (b * y) % n) % n
+def read_input_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            a, b, x, y, n = map(int, file.read().split())
+            return a, b, x, y, n
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+        return None, None, None, None, None
+    except Exception as e:
+        print(f"Error reading file '{filename}': {e}")
+        return None, None, None, None, None
 
-    # Biểu thức 2: A2 = (a*x - b*y) mod n
-    A2 = ((a * x) % n - (b * y) % n) % n
-
-    # Biểu thức 3: A3 = (a*x * b*y) mod n
-    A3 = ((a * x) % n * (b * y) % n) % n
-
-    # Biểu thức 4: A4 = (b*y)^-1 mod n
-    A4 = pow((b * y) % n, -1, n)  # Sử dụng pow với số mũ âm để tính nghịch đảo modulo
-
-    # Biểu thức 5: A5 = (a*x / b*y) mod n
-    A5 = ((a * x) % n * pow((b * y) % n, -1, n)) % n
-
+def compute_expressions(a, b, x, y, n):
+    A1 = (a * x + b * y) % n
+    A2 = (a * x - b * y) % n
+    A3 = (a * x * b * y) % n
+    A4 = pow(b * y, -1, n)
+    A5 = (a * x * pow(b * y, -1, n)) % n
     return A1, A2, A3, A4, A5
 
-# Nhập các giá trị từ người dùng
-a = int(input("Nhập giá trị a: "))
-b = int(input("Nhập giá trị b: "))
-x = int(input("Nhập giá trị x: "))
-y = int(input("Nhập giá trị y: "))
-n = int(input("Nhập giá trị n: "))
+# Đọc giá trị a, b, x, y, n từ file input
+input_filename = "Chuong2_modulo/input.txt" 
+a, b, x, y, n = read_input_file(input_filename)
 
-# Tính các biểu thức modulo cơ bản
-result = basic_modulo_operations(a, b, x, y, n)
-
-# In ra kết quả
-print("Biểu thức 1 (A1):", result[0])
-print("Biểu thức 2 (A2):", result[1])
-print("Biểu thức 3 (A3):", result[2])
-print("Biểu thức 4 (A4):", result[3])
-print("Biểu thức 5 (A5):", result[4])
+if (a is not None and b is not None and x is not None and y is not None and n is not None):
+    # Tính các biểu thức modulo cơ bản
+    A1, A2, A3, A4, A5 = compute_expressions(a, b, x, y, n)
+    # In kết quả
+    print("A1 =", A1)
+    print("A2 =", A2)
+    print("A3 =", A3)
+    print("A4 =", A4)
+    print("A5 =", A5)
+else:
+    print("loi khi doc file.")
