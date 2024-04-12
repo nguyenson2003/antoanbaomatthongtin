@@ -55,7 +55,7 @@ def read_input_file(filename):
         return None
 
 # Đọc văn bản và khóa từ file input
-input_filename = "inputB4C1.txt"
+input_filename = "Chuong1_macodien/input5.txt"
 input_data = read_input_file(input_filename)
 
 if input_data:

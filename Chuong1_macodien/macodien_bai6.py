@@ -18,7 +18,7 @@ def encrypt(plaintext, key):
     return ciphertext
 
 # Đọc khóa và văn bản cần mã hóa từ file input
-input_filename = "input.txt"
+input_filename = "Chuong1_macodien/input6.txt"
 key, plaintext = read_input_file(input_filename)
 
 if key is not None and plaintext is not None:
